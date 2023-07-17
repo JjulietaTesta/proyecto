@@ -1,6 +1,6 @@
 import express from 'express';
 import productRouter from "./router/product.router.js";
-import cartRouter from "./classes/carritoManager.js"
+import cartRouter from "./router/cart.router.js"
 
 
 const app = express();
@@ -18,6 +18,4 @@ app.use("/api/carts", cartRouter);
 app.listen (PORT, ()=>{
     console.log("el server esta corriendo en el puerto 8080")
 })
-
-
 
