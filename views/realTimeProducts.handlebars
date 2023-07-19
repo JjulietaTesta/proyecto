@@ -63,11 +63,16 @@
 
 <div>
     {{#each products}}
-    <p>Código: {{code}}</p>
-    <p>Nombre: {{nombre}}</p>
-    <p>Descripción: {{description}}</p>
-    <p>Precio: {{price}}</p>
-    <p>Stock: {{stock}}</p>
-    <p>Categoría: {{category}}</p>
-    
+    <p>Código: {{this.code}}</p>
+    <p>Nombre: {{this.nombre}}</p>
+    <p>Descripción: {{this.description}}</p>
+    <p>Precio: {{this.price}}</p>
+    <p>Stock: {{this.stock}}</p>
+    <p>Categoría: {{this.category}}</p>
+    <button class="deleteButton" id={{this.id}}>Eliminar</button>
+
+{{/each}}
+
 </div>
+
+<script src="/socket.io/socket.io.js"></script>

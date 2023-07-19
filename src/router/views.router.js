@@ -1,26 +1,11 @@
-import express from "express";
+import { Router } from "express";
+import {getProductsList} from "../services/productUtils.js"
 
-import { ProductManager } from "../classes/productManager.js";
+const viewsRouter = Router();
 
+viewsRouter.get("/", (req, res)=>{
+    const products = getProductsList();
+    res.render("home", {products})
+})
 
-const productosManagerV1 = new ProductManager ("./productos.json");
-const router = express.Router();
-
-router.get ("/products", (req, res)=>{
-    let products = productosManagerV1.getProducts();
-    res.render("home", {products});
-});
-
-router.get ("/realTimeProducts", (req, res)=>{
-    const products = productosManagerV1.getProducts();
-
-
-    io.on ("connection", socket =>{
-        console.log ("Nuevo cliente conectado", socket)
-        socket.emit ("connection", {products})
-    })
-
-    res.render ("realTimeProducts", products)
-});
-
-export default router;
+export default viewsRouter;

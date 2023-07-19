@@ -1,16 +1,21 @@
 import { engine } from "express-handlebars";
 import express from 'express';
-import { __filename, __dirname } from "./utils.js";
+import { __dirname } from "./utils.js";
 import viewsRoute from "./router/views.router.js";
-import {createServer } from "http";
+import productRouter from "./router/product.router.js";
+import cartRouter from "./router/cart.router.js";
+import realTimeProducts from "./router/realTimeProduct.router.js";
 import { Server } from "socket.io";
-import router from "./router/views.router.js";
+import { saveProduct } from "./services/productUtils.js";
+import { deleteProduct } from "./services/productUtils.js";
 
 
 const app = express();
-const httpServer = createServer(app);
-
 const PORT = 8080;
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
 
 
 app.engine("handlebars", engine());
@@ -18,25 +23,23 @@ app.set("view engine", "handlebars");
 app.set("views", `${__dirname}/views`);
 
 
-app.use(express.static("public"));
-
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 
 
 app.use("/", viewsRoute);
-app.use("/realtime", router);
+app.use("/api/products", productRouter);
+app.use("/api/carts", cartRouter);
+app.use("/realtimeproducts", realTimeProducts);
 
 
-httpServer.listen(PORT, () => {
+
+ const httpServer = app.listen(PORT, () => {
   console.log(`Servidor en ejecución en http://localhost:${PORT}`);
 });
 
 
-const io = new Server(httpServer);
+const socketServer = new Server(httpServer);
 
-io.on("connection", (socket) => {
+socketServer.on("connection", (socket) => {
   console.log("Nuevo cliente conectado");
 
   
@@ -48,11 +51,17 @@ io.on("connection", (socket) => {
   });
 
  
-  socket.on("agregarProducto", (newProduct) => {
-    console.log("Nuevo producto recibido backend:", newProduct);
-    guardarProducto(newProduct);
+  socket.on("agregarProducto", product => {
+    saveProduct(product)
+    socket.emit(product)
     
-    io.emit("nuevoProductoAgregado", newProduct);
   });
+  
+  socket.on("eliminar producto", productId=>{
+    const {id} = productId
+    deleteProduct(id)
+    socket.emit("producto eliminado", id)
+  })
+
   
 });
