@@ -1,7 +1,7 @@
 import express from "express";
 
 import { ProductManager } from "../classes/productManager.js";
-import { io } from "../app.js";
+
 
 const productosManagerV1 = new ProductManager ("./productos.json");
 const router = express.Router();
