@@ -1,45 +1,52 @@
 [
-{
-    "id":1,
-    "title":"mouse",
-    "description":"inalambrico",
-    "price":45,
-    "thumbnail":"sin imagen",
-    "code":"abc123",
-    "stock":25
-},
-{
-    "id":3,
-    "title":"auriculares",
-    "description":"inalambricos",
-    "price":2300,
-    "thumbnail":"sin imagen",
-    "code":"ab345",
-    "stock":25
-},
-{
-    "id":4,
-    "title":"parlante PC",
-    "description":"JBL",
-    "price":23450,
-    "thumbnail":"sin imagen",
-    "code":"ab236a",
-    "stock":25
-},
-{   
-    "id":1,
-    "title":"mouse",
-    "description":"inalambrico",
-    "price":2.4,
-    "code":"mouse123",
-    "stock":324
-},
-{
-    "id":1,
-    "title":"mteclado",
-    "description":"inalambrico",
-    "price":54.4,
-    "code":"teclado123",
-    "stock":34
-    }
+  {
+    "id": 1,
+    "title": "mouse",
+    "description": "inalambrico",
+    "price": 45,
+    "thumbnail": "sin imagen",
+    "code": "abc123",
+    "stock": 25
+  },
+  {
+    "id": 3,
+    "title": "auriculares",
+    "description": "inalambricos",
+    "price": 2300,
+    "thumbnail": "sin imagen",
+    "code": "ab345",
+    "stock": 25
+  },
+  {
+    "id": 4,
+    "title": "parlante PC",
+    "description": "JBL",
+    "price": 23450,
+    "thumbnail": "sin imagen",
+    "code": "ab236a",
+    "stock": 25
+  },
+  {
+    "id": 1,
+    "title": "mouse",
+    "description": "inalambrico",
+    "price": 2.4,
+    "code": "mouse123",
+    "stock": 324
+  },
+  {
+    "id": 1,
+    "title": "mteclado",
+    "description": "inalambrico",
+    "price": 54.4,
+    "code": "teclado123",
+    "stock": 34
+  },
+  {
+    "name": "pelota",
+    "title": "pelota",
+    "description": "de futbol",
+    "price": "25",
+    "thumbnail": "img"
+  }
 ]

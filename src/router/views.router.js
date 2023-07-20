@@ -5,7 +5,7 @@ const viewsRouter = Router();
 
 viewsRouter.get("/", (req, res)=>{
     const products = getProductsList();
-    res.render("home", {products})
+    res.render("realTimeProducts", {products})
 })
 
 export default viewsRouter;

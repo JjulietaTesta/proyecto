@@ -1,8 +1,103 @@
 body {
-
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 14px;
-    color: #bc6767;
-    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #d6b8b8;
+    padding: 20px;
+  }
+  
+  h1 {
+    text-align: center;
+    color: #b75faa;
+  }
+  
+  form {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  input[type="text"],
+  input[type="number"],
+  textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+  }
+  
+  button[type="submit"] {
+    padding: 10px 20px;
+    background-color: #a961a5;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  ul {
+    list-style-type: none;
     padding: 0;
-}
+    margin: 0;
+  }
+  
+  li {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  li h3 {
+    margin-top: 0;
+    color: #004d9c;
+  }
+  
+  li p {
+    color: #666;
+    margin-bottom: 5px;
+  }
+
+  
+ /* styles.css */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: space-between;
+  }
+  
+  .product-card {
+    border: 1px solid #9c5ea2;
+    padding: 10px;
+    margin-bottom: 20px;
+    width: 300px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  }
+  
+  .product-card p {
+    margin: 5px 0;
+  }
+  
+  .product-card .deleteButton {
+    background-color: #814c85;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  .product-card .deleteButton:hover {
+    background-color: #cc0000;
+  }
+  

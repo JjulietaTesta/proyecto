@@ -61,8 +61,9 @@
     <button type="submit">Agregar</button>
   </form>
 
-<div>
+<div class="container">
     {{#each products}}
+    <div class="product-card">
     <p>Código: {{this.code}}</p>
     <p>Nombre: {{this.nombre}}</p>
     <p>Descripción: {{this.description}}</p>
@@ -70,7 +71,7 @@
     <p>Stock: {{this.stock}}</p>
     <p>Categoría: {{this.category}}</p>
     <button class="deleteButton" id={{this.id}}>Eliminar</button>
-
+    </div>
 {{/each}}
 
 </div>
