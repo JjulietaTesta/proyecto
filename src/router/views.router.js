@@ -5,11 +5,11 @@ const router = Router();
 
 router.get("/", async (req, res)=>{
     const products = await ProductsModel.find({}).lean();
-    res.render({message: 'productos agregados', productos: products})
+    res.render("home", {message: 'productos agregados', productos: products})
 });
 
-router.get("/realTimePorducts", async (req, res) =>{
-    res.render({message: 'productos en tiempo real', })
+router.get("/realTimeProducts", async (req, res) =>{
+    res.render("realTimeProducts", {message: 'productos en tiempo real', })
 })
 
 router.post("/agregarProducto", async (req, res)=>{

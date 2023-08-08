@@ -3,9 +3,9 @@ import express from 'express';
 import { __dirname } from "./utils.js";
 import viewsRoute from "./router/views.router.js";
 import ProductsModel from "./dao/models/products.js";
+import messageModel from "./dao/models/messages.js";
 import productRouter from "./router/product.router.js";
 import cartRouter from "./router/cart.router.js";
-import realTimeProducts from "./router/realTimeProduct.router.js";
 import { Server } from "socket.io";
 import * as dotenv from 'dotenv';
 import mongoose from "mongoose";
@@ -33,7 +33,7 @@ app.set("views", "./views");
 app.use("/", viewsRoute);
 app.use("/api/products", productRouter);
 app.use("/api/carts", cartRouter);
-app.use("/realtimeproducts", realTimeProducts);
+app.use("/chat", messageModel )
 
 
 
@@ -77,5 +77,14 @@ socketServer.on("connection", async (socket) => {
   const productos = await ProductsModel.find({}).lean()
   socket.emit('actualizando productos', productos)
 
+  socket.on("guardar-mensaje", (data)=>{
+    messageModel.insertMany([data])
+  })
+
+  const mensajes = await messageModel.find({}).lean()
+  socket.emit("enviar-msj", mensajes)
+  socket.on("nuevos-msj", (data)=>{
+    console.log(data+ "nuevos mensajes")
+  })
   
 });
