@@ -1,45 +1,49 @@
-import express from "express";
 import { Router } from "express";
-import CarritoManager from "../classes/carritoManager.js";
-const router = Router();
-const carritosManagerV1 = new CarritoManager("carritos.json");
+import ProductsModel from "../dao/models/products.js";
+import cartModel from "../dao/models/carts.js";
 
-router.use(express.json());
-router.use(express.urlencoded({ extended: true }));
+
+const router = Router();
+
 
 router.post("/", async (req, res) => {
-  try {
-    await carritosManagerV1.addCarrito();
-    res.json({
-      status: "200 ok",
-      message: `el carrito se añadio correctamente`,
-    });
-  } catch (err) {
-    res.status(err.statusCode).send(` ${err}`);
+  const cart = {
+    products : []
   }
+  let result = await cartModel.insertMany([cart])
+  return res.json({message: 'carrito creado con exito', data: result})
 });
 
 router.get("/:cid", async (req, res) => {
-  const id = Number(req.params.cid);
-  try {
-    const carrito = await carritosManagerV1.getCarritosById(id);
-    res.json({ status: "200 ok", message: carrito });
-  } catch (err) {
-    res.status(err.statusCode).send(` ${err}`);
-  }
+  const {cid} = req.params
+  let result = await cartModel.findById(cid)
+  return res.json({message:'producto encontrado', data: result})
 });
 
 router.post("/:cid/product/:pid", async (req, res) => {
-  const idCarrito = Number(req.params.cid);
-  const idProduct = Number(req.params.pid);
-  try {
-    const carrito = await carritosManagerV1.addProductToCarrito(
-      idCarrito,
-      idProduct
-    );
-    res.json({ status: "200 ok", message: carrito });
-  } catch (err) {
-    res.status(err.statusCode).send(` ${err}`);
+  const {cid, pid} = req.params
+  let carrito = await cartModel.findById(cid)
+  let producto = await ProductsModel.findById(pid)
+
+  if (carrito){
+    let productsCart = carrito.products
+    if (productsCart.some((productsCart)=> productsCart.product === producto.id)){
+      let producto = productsCart.find((producto)=> producto.product=== pid)
+      producto.quantity++
+      let result = await cartModel.findByIdAndUpdate(cid, carrito)
+      return res.json({message:'producto agregado', data:result})
+    } else {
+       const productoEnCart = {
+        product: producto.id,
+        quantity: 1
+       }
+
+      carrito.products.push(productoEnCart)
+      let result = await cartModel.findByIdAndUpdate(cid, carrito)
+      return res.json({message: "Producto agregado al carrito", data: result})
+    } 
+  }  else {
+    return res.json({messaage:'carrito no encontrado'})
   }
 });
 

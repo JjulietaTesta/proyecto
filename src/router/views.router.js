@@ -1,11 +1,37 @@
 import { Router } from "express";
-import {getProductsList} from "../services/productUtils.js"
+import ProductsModel from "../dao/models/products.js";
 
-const viewsRouter = Router();
+const router = Router();
 
-viewsRouter.get("/", (req, res)=>{
-    const products = getProductsList();
-    res.render("realTimeProducts", {products})
+router.get("/", async (req, res)=>{
+    const products = await ProductsModel.find({}).lean();
+    res.render({message: 'productos agregados', productos: products})
+});
+
+router.get("/realTimePorducts", async (req, res) =>{
+    res.render({message: 'productos en tiempo real', })
 })
 
-export default viewsRouter;
+router.post("/agregarProducto", async (req, res)=>{
+    const {title, description, code, price, stock, category, thumbnail} = req.body;
+    if (!title || !description || !code || !price || !stock || !category || !thumbnail){
+        return res.status(500).json({message : "Faltan datos"})
+    } else {
+        const newProduct = {
+            title : title, 
+            description : description,
+            code : code,
+            price : price,
+            stock : +stock,
+            category : category, 
+            thumbnail : thumbnail
+        }
+
+        let result = await ProductsModel.insertMany([newProduct])
+        return res.status(201).json({message: 'producto agregado', data: result})
+    }
+})
+
+
+
+export default router;
