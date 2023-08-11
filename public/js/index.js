@@ -2,12 +2,6 @@ const socket = io();
 
 socket.emit("connection", "nuevo cliente conectado");
 
-Swal.fire({
-  title:'Bienvenido',
-  text: 'Ingreso exitoso',
-  icon: 'success'
-}) 
-
 
 const form = document.getElementById("productForm")
 form.addEventListener("submit", (e)=>{

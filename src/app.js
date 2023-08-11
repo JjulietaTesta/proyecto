@@ -5,6 +5,7 @@ import viewsRoute from "./router/views.router.js";
 import ProductsModel from "./dao/models/products.js";
 import messageModel from "./dao/models/messages.js";
 import productRouter from "./router/product.router.js";
+import chatRouter from "./router/chat.router.js"
 import cartRouter from "./router/cart.router.js";
 import { Server } from "socket.io";
 import * as dotenv from 'dotenv';
@@ -33,7 +34,7 @@ app.set("views", "./views");
 app.use("/", viewsRoute);
 app.use("/api/products", productRouter);
 app.use("/api/carts", cartRouter);
-app.use("/chat", messageModel )
+app.use("/chat", chatRouter );
 
 
 
