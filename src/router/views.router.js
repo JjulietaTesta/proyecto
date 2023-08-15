@@ -17,7 +17,7 @@ router.get("/", async (req, res)=>{
     limit,
     sort,
     query,
-    script: "agregarProductos.js"})
+    script: "agregarProducto.js"})
 });
 
 router.get("/realTimeProducts", async (req, res) =>{

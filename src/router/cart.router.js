@@ -50,7 +50,7 @@ router.delete("/:cid/products/:pid", async (req,res)=>{
   const {cid, pid} = req.params
   let carrito = await cartModel.findOne({_id:cid})
   let productos = carrito.products
-  let producto = productos.findIndex((producto) => producto.product.id === id)
+  let producto = productos.findIndex((producto) => producto.product.id === pid)
   if (producto !== -1) {
     productos.splice(producto,1)
     let result = await cartModel.findByIdAndUpdate(cid,carrito)

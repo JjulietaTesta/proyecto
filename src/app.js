@@ -6,12 +6,11 @@ import ProductsModel from "./dao/models/products.js";
 import messageModel from "./dao/models/messages.js";
 import productRouter from "./router/product.router.js";
 import chatRouter from "./router/chat.router.js"
-import cartRouter from "./router/cart.router.js";
+import cartRouter from "./router/cart.router.js"
 import { Server } from "socket.io";
 import * as dotenv from 'dotenv';
 import mongoose from "mongoose";
-import realTimeProducts from "./router/realTimeProducts.router.js";
-import { addProduct,deleteProduct  } from "./classes/productManager.js";
+
 
 dotenv.config();
 const app = express();
@@ -37,7 +36,7 @@ app.use("/", viewsRoute);
 app.use("/products", productRouter);
 app.use("/cart", cartRouter);
 app.use("/chat", chatRouter );
-app.use("/realtimeproducts", realTimeProducts);
+
 
 
 
