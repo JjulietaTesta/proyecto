@@ -10,6 +10,8 @@ import cartRouter from "./router/cart.router.js";
 import { Server } from "socket.io";
 import * as dotenv from 'dotenv';
 import mongoose from "mongoose";
+import realTimeProducts from "./router/realTimeProducts.router.js";
+import { addProduct,deleteProduct  } from "./classes/productManager.js";
 
 dotenv.config();
 const app = express();
@@ -32,9 +34,10 @@ app.set("views", "./views");
 
 
 app.use("/", viewsRoute);
-app.use("/api/products", productRouter);
-app.use("/api/carts", cartRouter);
+app.use("/products", productRouter);
+app.use("/cart", cartRouter);
 app.use("/chat", chatRouter );
+app.use("/realtimeproducts", realTimeProducts);
 
 
 
@@ -57,30 +60,19 @@ socketServer.on("connection", async (socket) => {
   });
 
  
-  socket.on("nuevo-producto",async (product) => {
-    let title = product.title
-    let description = product.description
-    let code = product.code
-    let price = +product.price
-    let stock = +product.stock
-    let category = product.category
-    let thumbnail = product.thumbnail
-    console.log(title, description, code, price, stock, category, thumbnail)
-    console.log('producto agregado')
+  socket.on("agregar producto", (product) => {
+    addProduct(product)
   });
   
-  socket.on("eliminar producto", async (productId)=>{
-    const {id} = productId
+  socket.on("eliminar producto", async(data)=>{
+    let id = data
     let result = await ProductsModel.findByIdAndDelete(id)
-    socket.emit("producto eliminado", result)
+    console.log("producto eliminado", result)
   })
 
   const productos = await ProductsModel.find({}).lean()
-  socket.emit('actualizando productos', productos)
-
-  socket.on("guardar-mensaje", (data)=>{
-    messageModel.insertMany([data])
-  })
+  socket.emit("actualizar productos", productos)
+  
 
   const mensajes = await messageModel.find({}).lean()
   socket.emit("enviar-msj", mensajes)

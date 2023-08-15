@@ -1,82 +1,57 @@
-import utils from "../utils.js";
+import cartModel from "../dao/models/carts.js";
 
-class CarritoManager {
-  static correlativoId = 0;
-  static carritos;
-  constructor(path) {
-    this.carritos = [];
-    this.correlativoId = 0;
-    this.path = path;
+const addCart = async () => {
+  const newCart = {
+    products: [],
+  };
+
+  const cartAdded = await cartModel.create(newCart);
+  return cartAdded;
+};
+
+const getCart = async () => {
+  const response = await cartModel.find();
+  return response;
+};
+
+const getCartById = async (id) => {
+  const response = await cartModel.findById(id);
+  return response;
+};
+
+const addProductToCart = async (cid, pid) => {
+  /* traigo el carrito con el ID buscado */
+  const cart = await cartModel.findById(cid);
+  /* chequeo si dentro del carrito hay un producto con el pid igual */
+  const productIndex = cart.products.findIndex(
+    (product) => product.product === pid
+  );
+  /* condicional parar determinar la accion a tomar dependiendo si existe el producto o no */
+  if (productIndex === -1) {
+    const newProduct = {
+      product: pid,
+      quantity: 1,
+    };
+
+    cart.products.push(newProduct)
+    const response = await cartModel.findByIdAndUpdate(cid, {products: cart.products})
+    return response;
+  } else {
+    /* obtengo la cantidad del producto y lo incremento en 1. */
+    let newQuantity = cart.products[productIndex].quantity
+    newQuantity++;
+
+     // Actualizo el campo 'quantity' del producto existente
+    cart.products[productIndex].quantity = newQuantity;
+    await cartModel.findByIdAndUpdate(cid, {products: cart.products})
+    const response = await cartModel.findById(cid)
+    return response;
   }
+};
 
-  addCarrito = async () => {
-    this.carritos = await this.getCarritos();
-    this.carritos.push({
-      id: this.carritos.length ? this.carritos.length : 0,
-      products: [],
-    });
+const updateCart = async (cid, cart) => {
+  const response = cartModel.findByIdAndUpdate(cid, cart);
+  return response;
+};
 
-    utils.writeFile(this.path, this.carritos);
-  };
-
-  getCarritos = async () => {
-    try {
-      let data = await utils.readFile(this.path);
-      return data?.length > 0 ? data : [];
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  getCarritosById = async (id) => {
-    this.carritos = await this.getCarritos(id);
-    const carrito = this.carritos.find((el) => el.id === id);
-
-    if (!carrito || carrito === undefined) {
-      let error = new Error("debe ingresar un id de carrito existente");
-      error.statusCode = 400;
-      throw error;
-    }
-
-    return carrito;
-  };
-
-  getIndexProductFromCarrito = async (carrito, idProduct) => {
-    if (carrito.products) {
-      const productIndex = carrito.products.findIndex(
-        (el) => el.id === idProduct
-      );
-      return productIndex;
-    }
-    return -1;
-  };
-  addProductToCarrito = async (id, idProduct) => {
-    this.carritos = await this.getCarritos();
-    let carrito = await this.getCarritosById(id);
-
-    if (!carrito) {
-      let error = new Error("no existe carrito");
-      error.statusCode = 400;
-      throw error;
-    }
-    const carritoIndex = this.carritos.findIndex(
-      (carrito) => carrito.id === id
-    );
-
-    const productIndex = await this.getIndexProductFromCarrito(
-      carrito,
-      idProduct
-    );
-
-    productIndex !== -1
-      ? this.carritos[carritoIndex].products[productIndex].quantity++
-      : this.carritos[carritoIndex].products.push({
-          id: idProduct,
-          quantity: 1,
-        });
-
-    utils.writeFile(this.path, this.carritos);
-  };
-}
-
-export default CarritoManager;
+export { addCart, getCart, getCartById, addProductToCart, updateCart };

@@ -2,24 +2,16 @@ import { Router } from "express";
 import ProductsModel from '../dao/models/products.js';
 
 const router = Router();
-//const productManager = new ProductManager('productos.json');
-// let productos = [];
+
 
 router.get ("/",async (req,res)=>{
-    const { limit } = req.query;
-
-    if (limit) {
-        let response = await ProductsModel.find().limit(limit);
-        res.json({message:'productos encontrados', data: response})
-        } else {
-            let response = await ProductsModel.find()
-            if (response.length === 0) {
-                res.json({message: 'no hay productos', data: response})
-            } else {
-                res.json({message: 'todos los productos', data: response})
-            }
-    }
-
+    const { limit = 10, page = 1, sort, query } = req.query;
+    const results = await ProductsModel.paginate(query ? {category:query} : {}, {limit, page, lean:true, sort:sort ? {price:1} : {price: -1}})
+    let prevLink = results.hasPrevPage ? `http://localhost:8080/productos/?page=${+page-1}&limit=${limit}&query=${query}&sort=${sort}` : null
+    let nextLink = results.hasNextPage ? `http://localhost:8080/productos/?page=${+page+1}&limit=${limit}&query=${query}&sort=${sort}` : null
+    results.prevLink = prevLink
+    results.nextLink = nextLink
+    res.send(results)
 });
 
 
