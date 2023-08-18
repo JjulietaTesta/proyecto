@@ -60,7 +60,15 @@ socketServer.on("connection", async (socket) => {
 
  
   socket.on("agregar producto", (product) => {
-    addProduct(product)
+      let title = data.title
+      let description = data.description
+      let code = data.code
+      let price = +data.price
+      let stock = +data.stock
+      let category = data.category
+      let thumbnail = data.thumbnail
+      console.log(title,description,code,price,stock,category,thumbnail)
+      console.log("Producto agregado correctamente")
   });
   
   socket.on("eliminar producto", async(data)=>{

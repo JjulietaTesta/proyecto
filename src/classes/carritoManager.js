@@ -20,13 +20,13 @@ const getCartById = async (id) => {
 };
 
 const addProductToCart = async (cid, pid) => {
-  /* traigo el carrito con el ID buscado */
+  
   const cart = await cartModel.findById(cid);
-  /* chequeo si dentro del carrito hay un producto con el pid igual */
+  
   const productIndex = cart.products.findIndex(
     (product) => product.product === pid
   );
-  /* condicional parar determinar la accion a tomar dependiendo si existe el producto o no */
+  
   if (productIndex === -1) {
     const newProduct = {
       product: pid,
@@ -37,7 +37,7 @@ const addProductToCart = async (cid, pid) => {
     const response = await cartModel.findByIdAndUpdate(cid, {products: cart.products})
     return response;
   } else {
-    /* obtengo la cantidad del producto y lo incremento en 1. */
+   
     let newQuantity = cart.products[productIndex].quantity
     newQuantity++;
 
