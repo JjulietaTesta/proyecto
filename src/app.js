@@ -10,6 +10,8 @@ import cartRouter from "./router/cart.router.js"
 import { Server } from "socket.io";
 import * as dotenv from 'dotenv';
 import mongoose from "mongoose";
+import  FileStore  from "session-file-store";
+import session from "express-session";
 
 
 
@@ -20,7 +22,12 @@ const MONGO_URI = process.env.MONGO_URI
 const connection = mongoose.connect(MONGO_URI)
 console.log(MONGO_URI)
 
+app.use(session({
+  secret: 'codersession',
+  resave: true,
+  saveUninitialized: true
 
+}))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
@@ -38,6 +45,33 @@ app.use("/cart", cartRouter);
 app.use("/chat", chatRouter );
 
 
+app.get("/login", (req,res)=>{
+  res.render("login", {})
+})
+
+app.get("/session", (req, res) =>{
+  if (req.session.counter){
+    req.session.counter++
+    res.send (`se ha visitado el sitio ${req.session.counter} veces`)
+  } else {
+    req.session.counter=1
+    res.send("Primera vez en la pagina")
+  }
+})
+
+
+app.get ("/logout", (req, res)=>{
+  req.session.destroy(err =>{
+    if(!err) {
+      res.send("Has cerrado sesion")
+    } else {
+      res.json({
+        status: "error al cerrar sesion",
+        body: err
+      })
+    }
+  })
+})
 
 
  const httpServer = app.listen(PORT, () => {
