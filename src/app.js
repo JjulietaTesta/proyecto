@@ -12,20 +12,46 @@ import * as dotenv from 'dotenv';
 import mongoose from "mongoose";
 import  FileStore  from "session-file-store";
 import session from "express-session";
+import MongoStore from "connect-mongo";
+import loginRouter from "./router/login.router.js";
+import signupRouter from "./router/signUp.router.js";
+import sessionRouter from "./router/session.router.js"
 
 
 
 dotenv.config();
 const app = express();
+//const fileStorage = FileStore(session)
 const PORT = process.env.PORT || 8080;
 const MONGO_URI = process.env.MONGO_URI
 const connection = mongoose.connect(MONGO_URI)
 console.log(MONGO_URI)
 
+/*
 app.use(session({
+  store: new fileStorage({
+    path: "./sessions",
+    ttl: 3600,
+    retries: 0
+  }),
   secret: 'codersession',
   resave: true,
   saveUninitialized: true
+
+}))
+*/
+
+app.use(session({
+  store: MongoStore.create({
+    mongoUrl: MONGO_URI,
+    mongoOptions: {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    }
+  }),
+  secret: 'codersession',
+  resave: false,
+  saveUninitialized: false
 
 }))
 app.use(express.json());
@@ -43,6 +69,9 @@ app.use("/", viewsRoute);
 app.use("/products", productRouter);
 app.use("/cart", cartRouter);
 app.use("/chat", chatRouter );
+app.use("/login", loginRouter);
+app.use("/signup", signupRouter);
+app.use("/api/session/", sessionRouter);
 
 
 app.get("/login", (req,res)=>{

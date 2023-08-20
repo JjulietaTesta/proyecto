@@ -2,7 +2,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
-  background: linear-gradient(to bottom right, #ffaa00, #ff6600);
+  background: linear-gradient(to bottom right, #61eea3, #d36cef);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -33,6 +33,7 @@ label {
 }
 
 input[type="text"],
+input[type="email"],
 input[type="password"] {
   width: calc(100% - 20px);
   padding: 10px;
@@ -41,7 +42,7 @@ input[type="password"] {
 }
 
 button {
-  background-color: #ff6600;
+  background-color: #8b5fd9;
   color: white;
   border: none;
   padding: 10px 20px;
