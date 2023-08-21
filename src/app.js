@@ -54,9 +54,11 @@ app.use(session({
   saveUninitialized: false
 
 }))
+app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public"));
+
+
 
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
