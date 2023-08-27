@@ -15,7 +15,9 @@ import session from "express-session";
 import MongoStore from "connect-mongo";
 import loginRouter from "./router/login.router.js";
 import signupRouter from "./router/signUp.router.js";
-import sessionRouter from "./router/session.router.js"
+import sessionRouter from "./router/session.router.js";
+import passport from "passport";
+import initializePassport from "./config/passport.config.js";
 
 
 
@@ -27,19 +29,7 @@ const MONGO_URI = process.env.MONGO_URI
 const connection = mongoose.connect(MONGO_URI)
 console.log(MONGO_URI)
 
-/*
-app.use(session({
-  store: new fileStorage({
-    path: "./sessions",
-    ttl: 3600,
-    retries: 0
-  }),
-  secret: 'codersession',
-  resave: true,
-  saveUninitialized: true
 
-}))
-*/
 
 app.use(session({
   store: MongoStore.create({
@@ -54,6 +44,12 @@ app.use(session({
   saveUninitialized: false
 
 }))
+
+
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

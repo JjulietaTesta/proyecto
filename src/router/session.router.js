@@ -1,31 +1,35 @@
 import { Router } from "express";
 import User from "../dao/models/user.js";
+import { createHash, isValidPassword } from "../utils.js";
+import passport from "passport";
 
 const router = Router()
 
 
-router.post("/login", async (req, res) => {
-    const { username, password } = req.body;
-  
-    const result = await User.find({
-      email: username,
-      password,
-    })
-    
-    if (result.length === 0)
-      return res.status(401).json({
-        respuesta: "error",
-      })
-    else {
-      req.session.user = username;
-      req.session.admin = true;
-      res.status(200).json({
-        respuesta: "ok",
-      })
-    }
-  })
 
-router.post("/signup", async (req, res)=>{
+router.post(
+  "/login",
+  passport.authenticate("login", {
+    failureRedirect: "/failLogin",
+  }),
+  async (req, res) => {
+    if (!req.user) {
+      return res.status(401).json("error de autenticacion");
+    }
+    req.session.user = {
+      first_name: req.user.first_name,
+      last_name: req.user.last_name,
+      email: req.user.email,
+      age: req.user.age,
+    };
+    req.session.admin = true;
+
+    res.send({ status: "success", mesage: "user logged", user: req.user });
+  }
+);
+
+/*
+  router.post("/signup", async (req, res)=>{
    const {first_name, last_name, age, email, password} = req.body
 
    const result = User.create({
@@ -33,7 +37,7 @@ router.post("/signup", async (req, res)=>{
     last_name,
     age, 
     email,
-    password
+    password: createHash(password)
    })
 
    if (result===null){
@@ -60,5 +64,22 @@ router.get("/logout", async (req, res)=>{
 
    
 })
+*/
+
+router.get ("/failogin", async (req, res) =>{
+  res.send({error: "failed"})
+})
+
+
+router.post("/signup", passport.authenticate('register',{
+  failureRedirect:"/failogin"}),
+  async (req, res) => {
+    res.send({status: "success", message: "usuario registrado"} )
+  }
+)
+
+
+
+
 
 export default router
