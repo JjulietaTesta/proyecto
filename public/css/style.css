@@ -45,6 +45,7 @@ button {
   background-color: #8b5fd9;
   color: white;
   border: none;
+  margin: 5px;
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
@@ -52,6 +53,6 @@ button {
 }
 
 button:hover {
-  background-color: #ff5500;
+  background-color: #76cc94;
 }
   
