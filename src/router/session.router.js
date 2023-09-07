@@ -1,11 +1,19 @@
 import { Router } from "express";
 import User from "../dao/models/user.js";
-import { createHash, isValidPassword } from "../utils.js";
+import { isValidPassword } from "../utils.js";
 import passport from "passport";
+import { generateToken, passportCall, authorization } from "../utils.js";
 
 const router = Router()
 
+router.get("/session/signup",(req,res)=>{
+  res.render("signup",{title: "Registrarse", style: "style.css", script: "signup.js"})
+})
 
+
+router.get("/",(req,res)=>{
+  res.render("login",{title: "Login", style: "style.css", script: "login.js"})
+})
 
 router.post(
   "/login",
@@ -28,43 +36,43 @@ router.post(
   }
 );
 
-/*
-  router.post("/signup", async (req, res)=>{
-   const {first_name, last_name, age, email, password} = req.body
-
-   const result = User.create({
-    first_name,
-    last_name,
-    age, 
-    email,
-    password: createHash(password)
-   })
-
-   if (result===null){
-    return res.status(401).json({
-        respuesta: "error",
-      })
-   } else {
-    req.session.user = email;
-    req.session.admin = true;
-    res.status(200).json({
-      respuesta: "ok",
-    })
-   }
-
-router.get("/logout", async (req, res)=>{
-    req.session.destroy(err=>{
-        if(!err){
-            return res.json({message: "has cerrado sesión"})
-        } else {
-            return res.json({message: "error al cerrar sesión"})
-        }
-    })
+router.post("/login",async(req,res)=>{
+  const {email,password} = req.body
+  const user = await User.findOne({email: email})
+  if(!user){
+      return res.json({status: "error", message: "User not found"})
+  }else{
+      if(!isValidPassword(password,user.password)){
+          return res.json({status: "error", message: "Invalid password"})
+      }else{
+          const myToken = generateToken(user)
+          res.cookie("coderCookieToken",myToken,{ 
+             maxAge: 60 * 60 * 1000,
+             httpOnly: true
+          })
+          return res.json({status: "success"}) 
+      }
+  }
 })
 
-   
+router.get("/current",passportCall("jwt"),authorization("user"),(req,res)=>{
+  res.send(req.user)
 })
-*/
+
+router.get("/logout",(req,res)=>{
+  req.session.destroy(err=>{
+      if(!err){
+         return res.json({
+          message: "Sesión cerrada"
+         })
+      }else{
+         return res.json({
+          message: "Error al cerrar sesión"
+         }) 
+      }
+  })
+})
+
 
 router.get ("/failogin", async (req, res) =>{
   res.send({error: "failed"})

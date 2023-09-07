@@ -1,3 +1,13 @@
+
+const loginForm = document.getElementById("login-form");
+  
+loginForm.addEventListener("submit", function (event) {
+  event.preventDefault();
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+  postLogin(username, password).then((datos) => console.log(datos));
+});
+
 async function postLogin(username, password) {
     const response = await fetch("/api/session/login", {
       method: "POST",
@@ -11,11 +21,3 @@ async function postLogin(username, password) {
     return result;
   }
   
-  const loginForm = document.getElementById("login-form");
-  
-  loginForm.addEventListener("submit", function (event) {
-    event.preventDefault();
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-    postLogin(username, password).then((datos) => console.log(datos));
-  });

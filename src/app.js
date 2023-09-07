@@ -1,6 +1,6 @@
 import { engine } from "express-handlebars";
 import express from 'express';
-import { __dirname } from "./utils.js";
+import { __dirname, authToken } from "./utils.js";
 import viewsRoute from "./router/views.router.js";
 import ProductsModel from "./dao/models/products.js";
 import messageModel from "./dao/models/messages.js";
@@ -10,7 +10,6 @@ import cartRouter from "./router/cart.router.js"
 import { Server } from "socket.io";
 import * as dotenv from 'dotenv';
 import mongoose from "mongoose";
-import  FileStore  from "session-file-store";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import loginRouter from "./router/login.router.js";
@@ -18,17 +17,17 @@ import signupRouter from "./router/signUp.router.js";
 import sessionRouter from "./router/session.router.js";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
+import cookieParser from "cookie-parser";
 
 
 
 dotenv.config();
 const app = express();
-//const fileStorage = FileStore(session)
 const PORT = process.env.PORT || 8080;
 const MONGO_URI = process.env.MONGO_URI
 const connection = mongoose.connect(MONGO_URI)
-console.log(MONGO_URI)
 
+app.use(cookieParser("C0D3RS3CR3T"))
 
 
 app.use(session({
@@ -63,7 +62,7 @@ app.set("views", "./views");
 
 
 
-app.use("/", viewsRoute);
+app.use("/", authToken, viewsRoute);
 app.use("/products", productRouter);
 app.use("/cart", cartRouter);
 app.use("/chat", chatRouter );

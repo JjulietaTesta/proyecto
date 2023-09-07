@@ -3,31 +3,21 @@ import mongoose from "mongoose";
 const userCollection = "users"
 
 const userSchema = new mongoose.Schema({
-    first_name: {
-        type: String,
-        require: true, 
-        max: 100
+    first_name: String,
+    last_name: String,
+    email: {
+       type: String,
+       require: true
     },
-    last_name:{
-        type: String,
-        require: true, 
-        max: 100
-    },
-    email:{
-        type: String,
-        require: true, 
-        max: 100,
-        unique: true
-    },
+    age: Number,
     password: {
-        type: String,
-        require: true, 
-        max: 100  
+       type: String,
+       require: true
     },
-    age: {
-        type: Number,
-        require: true, 
-        max: 100 
+    cart: mongoose.Schema.Types.ObjectId,
+    role: {
+     type: String,
+     default: "user"
     }
     
 })
