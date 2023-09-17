@@ -1,7 +1,7 @@
 const signupForm = document.getElementById("signup-form");
 
 signupForm.addEventListener("submit", function (event) {
-  console.log("tracking");
+  
   event.preventDefault();
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
@@ -23,8 +23,7 @@ async function postSignup(first_name, last_name, age, username, password) {
       password,
     };
   
-    console.log("all  the data", data);
-    const response = await fetch("/api/session/signup", {
+    const response = await fetch("/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

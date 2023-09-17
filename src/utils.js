@@ -35,6 +35,7 @@ export const passportCall = (strategy)=>{
         passport.authenticate(strategy,(error,user,info)=>{
             if(error) return next(error)
             if(!user) return res.json({status: "error", message: info.messages ? info.messages : info.toString()})
+            user.role = "admin"
             req.user = user
             next()
         })(req,res,next)
@@ -43,8 +44,8 @@ export const passportCall = (strategy)=>{
 
 export const authorization = (role)=>{
     return async(req,res,next)=>{
-        if(!req.user) return res.json({status: "error", message: "Unauthorized"})
-        if(req.user.user.role !== role) return res.json({status: "error", message: "UnauthorizeD"})
+        if(!req.user) return res.json({status: "error", message: "Error de autenticación"})
+        if(req.user.user.role !== role) return res.json({status: "error", message: "Error de autenticación"})
         next()
     }
 }

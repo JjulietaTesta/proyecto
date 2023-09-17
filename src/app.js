@@ -2,8 +2,8 @@ import { engine } from "express-handlebars";
 import express from 'express';
 import { __dirname, authToken } from "./utils.js";
 import viewsRoute from "./router/views.router.js";
-import ProductsModel from "./dao/models/products.js";
-import messageModel from "./dao/models/messages.js";
+import ProductsModel from "./dao/mongo/models/products.js";
+import messageModel from "./dao/mongo/models/messages.js";
 import productRouter from "./router/product.router.js";
 import chatRouter from "./router/chat.router.js"
 import cartRouter from "./router/cart.router.js"
@@ -27,7 +27,7 @@ const PORT = process.env.PORT || 8080;
 const MONGO_URI = process.env.MONGO_URI
 const connection = mongoose.connect(MONGO_URI)
 
-app.use(cookieParser("C0D3RS3CR3T"))
+app.use(cookieParser())
 
 
 app.use(session({
@@ -62,9 +62,9 @@ app.set("views", "./views");
 
 
 
-app.use("/", authToken, viewsRoute);
-app.use("/products", productRouter);
-app.use("/cart", cartRouter);
+app.use("/", viewsRoute);
+app.use("/products", authToken, productRouter);
+app.use("/cart",authToken, cartRouter);
 app.use("/chat", chatRouter );
 app.use("/login", loginRouter);
 app.use("/signup", signupRouter);

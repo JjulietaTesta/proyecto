@@ -1,5 +1,5 @@
 import { Router } from "express";
-import User from "../dao/models/user.js";
+import User from "../dao/mongo/models/user.js";
 import { isValidPassword } from "../utils.js";
 import passport from "passport";
 import { generateToken, passportCall, authorization } from "../utils.js";
@@ -55,7 +55,7 @@ router.post("/login",async(req,res)=>{
   }
 })
 
-router.get("/current",passportCall("jwt"),authorization("user"),(req,res)=>{
+router.get("/current",passportCall("jwt"),authorization("admin"),(req,res)=>{
   res.send(req.user)
 })
 

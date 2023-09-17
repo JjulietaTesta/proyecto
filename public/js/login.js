@@ -9,7 +9,7 @@ loginForm.addEventListener("submit", function (event) {
 });
 
 async function postLogin(username, password) {
-    const response = await fetch("/api/session/login", {
+    const response = await fetch("/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
