@@ -3,6 +3,10 @@ import User from "../dao/mongo/models/user.js";
 import { isValidPassword } from "../utils.js";
 import passport from "passport";
 import { generateToken, passportCall, authorization } from "../utils.js";
+import {UsersRepository} from "../dao/repository/users.repository.js"
+import {USER_DAO} from "../dao/index.js"
+
+const userService = new UsersRepository(USER_DAO)
 
 const router = Router()
 
