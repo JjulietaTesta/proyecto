@@ -1,4 +1,4 @@
-export class UserMemoryDao {
+export default class UserMemoryDao {
     constructor(){
         this.users = []
     }

@@ -1,36 +1,37 @@
-const signupForm = document.getElementById("signup-form");
+let form = document.getElementById("signupForm")
+const loc = window.location.href.split(":")
 
-signupForm.addEventListener("submit", function (event) {
-  
-  event.preventDefault();
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
-  const first_name = document.getElementById("first_name").value;
-  const last_name = document.getElementById("last_name").value;
-  const age = document.getElementById("age").value;
+form.addEventListener("submit",(e)=>{
+    e.preventDefault()
+    let first_name = document.getElementById("first_name").value
+    let last_name = document.getElementById("last_name").value
+    let email = document.getElementById("email").value
+    let age = parseInt(document.getElementById("age").value)
+    let password = document.getElementById("password").value
+    register(first_name,last_name,email,age,password)
+})
 
-  postSignup(first_name, last_name, age, username, password).then((datos) =>
-    console.log(datos)
-  );
-});
-
-async function postSignup(first_name, last_name, age, username, password) {
-    const data = {
-      first_name,
-      last_name,
-      age,
-      email: username,
-      password,
-    };
-  
-    const response = await fetch("/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-  
-    const result = await response.json();
-    return result;
-  }
+const register = async (first_name,last_name,email,age,password)=>{
+    const response = await fetch("/register",{
+        method: "POST",
+        headers:{
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({first_name,last_name,email,age,password})
+    })
+    const data = await response.json()
+    console.log(data)
+    if(data.status === "success"){
+        Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Registrado con exito!',
+            showConfirmButton: false,
+            timer: 1500
+        })
+        setTimeout(()=>{
+            window.location.href = loc[0]+":"+loc[1]+":"+loc[2].split("/")[0]
+         },2000)
+    }
+    return data
+}

@@ -1,7 +1,21 @@
-import productsLocal from "./memory/products.dao.js"
-import cartsLocal from "./memory/carrito.dao.js"
-import productsMongo from "./mongo/products.dao.js"
-import cartsMongo from "./mongo/carrito.dao.js"
+import {configuration} from "../config.js"
 
-export const PRODUCTS_DAO = process.env.PERSISTENCE === "MONGO" ?    new productsLocal() : new productsMongo()
-export const CARTS_DAO = process.env.PERSISTENCE === "MONGO" ?    new cartsLocal() : new cartsMongo()
+configuration()
+
+import CarritoDao from "./memory/carrito.dao.js"
+import ProductsDao from "./memory/products.dao.js"
+import TicketMemoryDao from "./memory/ticket.dao.js"
+import UserMemoryDao from "./memory/user.dao.js"
+
+import  CarritoMongoDao from "./mongo/carrito.dao.js"
+import  ProductsMongoDao from "./mongo/products.dao.js"
+import  TicketMongoDao from "./mongo/ticket.dao.js"
+import UsersMongoDao from "./mongo/user.dao.js"
+
+
+export const PRODUCTS_DAO = process.env.PERSISTENCE === "MONGO" ?  new ProductsMongoDao() : new ProductsDao()
+export const CARTS_DAO = process.env.PERSISTENCE === "MONGO" ?  new CarritoMongoDao() : new CarritoDao()
+export const USER_DAO = process.env.PERSISTENCE === "MONGO" ? new UsersMongoDao() : new UserMemoryDao()
+export const TICKET_DAO = process.env.PERSISTENCE === "MONGO" ? new TicketMongoDao() : new TicketMemoryDao()
+
+

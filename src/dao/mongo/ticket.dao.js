@@ -1,6 +1,6 @@
 import { TICKET_MODEL } from "./models/ticket.js";
 
-export class TicketMongoDao{
+export default class TicketMongoDao{
     async getTickets(){
         return await TICKET_MODEL.find({})
     }

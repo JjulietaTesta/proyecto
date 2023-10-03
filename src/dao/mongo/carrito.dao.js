@@ -1,7 +1,7 @@
 import CartsModel from "./models/carts.js"
 import ProductsModel from "./models/products.js"
 
-export default class CarritoDao{
+export default class CarritoMongoDao{
 
     async getCarts(){
         try{

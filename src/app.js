@@ -18,14 +18,19 @@ import sessionRouter from "./router/session.router.js";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 import cookieParser from "cookie-parser";
+import {configuration} from "./config.js"
+import { ProductsRepository } from "./dao/repository/products.repository.js";
+import { PRODUCTS_DAO } from "./dao/index.js"
+import PRODUCTS_MODEL from "./dao/mongo/models/products.js"
 
 
-
-dotenv.config();
+configuration()
 const app = express();
 const PORT = process.env.PORT || 8080;
 const MONGO_URI = process.env.MONGO_URI
 const connection = mongoose.connect(MONGO_URI)
+
+const ENVIROMENT = process.env.ENVIROMENT
 
 app.use(cookieParser())
 
@@ -62,13 +67,13 @@ app.set("views", "./views");
 
 
 
-app.use("/", viewsRoute);
-app.use("/products", authToken, productRouter);
+app.use("/views", viewsRoute);
+app.use("/products", productRouter);
 app.use("/cart",authToken, cartRouter);
 app.use("/chat", chatRouter );
 app.use("/login", loginRouter);
 app.use("/signup", signupRouter);
-app.use("/api/session/", sessionRouter);
+app.use("/", sessionRouter);
 
 
 app.get("/login", (req,res)=>{
@@ -100,51 +105,43 @@ app.get ("/logout", (req, res)=>{
 })
 
 
- const httpServer = app.listen(PORT, () => {
+const httpServer = app.listen(PORT, () => {
   console.log(`Servidor en ejecución en http://localhost:${PORT}`);
 });
 
 
 const socketServer = new Server(httpServer);
 
-socketServer.on("connection", async (socket) => {
-  console.log("Nuevo cliente conectado");
+const productsService = new ProductsRepository(PRODUCTS_DAO)
 
-  
-  socket.on("mensaje", (data) => {
-    console.log("Mensaje recibido:", data);
+
+socketServer.on("connection", async (socket) => {
+    console.log("Nueva conexión establecida"); 
+
+
+    socket.on("disconnect",()=>{
+        console.log("Usuario desconectado")
+    })
+    
+      
+      socket.on("new-product", async (data) => {
+      const newProduct = await productsService.saveProduct(data) 
+      
+      const productos = process.env.PORT === "8080" ? await PRODUCTS_MODEL.find({}).lean({}) : await productsService.getProducts()
+      socket.emit("update-products", productos)
+    });
 
     
-    socket.emit("respuesta", "Mensaje recibido correctamente");
-  });
+    socket.on("delete-product",async(data)=>{  
+        let id = data;
+        let result = await productsService.deleteProduct(id);
+        console.log("Producto eliminado", result);
+        
+        const productos = process.env.PORT === "8080" ? await PRODUCTS_MODEL.find({}).lean({}) : await productsService.getProducts()
+        socket.emit("update-products", productos)
+    })
 
- 
-  socket.on("agregar producto", (product) => {
-      let title = data.title
-      let description = data.description
-      let code = data.code
-      let price = +data.price
-      let stock = +data.stock
-      let category = data.category
-      let thumbnail = data.thumbnail
-      console.log(title,description,code,price,stock,category,thumbnail)
-      console.log("Producto agregado correctamente")
-  });
-  
-  socket.on("eliminar producto", async(data)=>{
-    let id = data
-    let result = await ProductsModel.findByIdAndDelete(id)
-    console.log("producto eliminado", result)
+    
+    const productos = process.env.PORT === "8080" ? await PRODUCTS_MODEL.find({}).lean({}) : await productsService.getProducts()
+    socket.emit("update-products", productos) 
   })
-
-  const productos = await ProductsModel.find({}).lean()
-  socket.emit("actualizar productos", productos)
-  
-
-  const mensajes = await messageModel.find({}).lean()
-  socket.emit("enviar-msj", mensajes)
-  socket.on("nuevos-msj", (data)=>{
-    console.log(data+ "nuevos mensajes")
-  })
-  
-});

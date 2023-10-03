@@ -1,4 +1,4 @@
-export class TicketMemoryDao {
+export default class TicketMemoryDao {
     constructor(){
         this.ticket = []
     }

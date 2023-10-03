@@ -1,33 +1,9 @@
-<div class="login-container">
-  <form id="signup-form" class="signup-form">
-    <h2>Crea tu usuario</h2>
-    <div class="form-group">
-
-      <label for="first_name">Nombre:</label>
-      <input type="text" id="first_name" name="first_name" required />
-    </div>
-    <div class="form-group">
-
-      <label for="last_name">Apellido:</label>
-      <input type="text" id="last_name" name="last_name" required />
-    </div>
-    <div class="form-group">
-
-      <label for="age">Edad:</label>
-      <input type="number" id="age" name="age" required />
-    </div>
-    <div class="form-group">
-
-      <label for="username">Email:</label>
-      <input type="email" id="username" name="username" required />
-    </div>
-    <div class="form-group">
-
-      <label for="password">Contraseña:</label>
-      <input type="password" id="password" name="password" required />
-
-    </div>
-    <button id="signup" type="submit">Ingresar</button>
+ <form class="form-register" id="signupForm">
+    <h4>Formulario Registro</h4>
+    <input class="controls" type="text" name="name" id="first_name" placeholder="Tu nombre">
+    <input class="controls" type="text" name="last_name" id="last_name" placeholder="Tu Apellido">
+    <input class="controls" type="email" name="email" id="email" placeholder="Tu correo electronico">
+    <input class="controls" type="number" name="number" id="age" placeholder="Tu edad">
+    <input class="controls" type="password" name="password" id="password" placeholder="Tu contraseña">
+    <button class="botons" type="submit">Registrar</button>
   </form>
-</div>
-<script src="js/signup.js"></script>

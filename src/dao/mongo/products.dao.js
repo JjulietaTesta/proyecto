@@ -1,6 +1,6 @@
 import ProductsModel from "./models/products.js"
 
-export default class ProductsDao{
+export default class ProductsMongoDao{
 
    async getProducts(req,res){
         try{

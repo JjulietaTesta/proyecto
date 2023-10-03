@@ -1,23 +1,34 @@
 
-const loginForm = document.getElementById("login-form");
-  
-loginForm.addEventListener("submit", function (event) {
-  event.preventDefault();
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
-  postLogin(username, password).then((datos) => console.log(datos));
-});
+let form = document.getElementById("loginForm")
 
-async function postLogin(username, password) {
-    const response = await fetch("/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password }),
-    });
-  
-    const result = await response.json();
-    return result;
-  }
-  
+const loc = window.location.href.split(":")
+
+form.addEventListener("submit",(e)=>{
+    e.preventDefault()
+    let email = document.getElementById("mail").value
+    let password = document.getElementById("password").value
+    login(email,password)
+})
+
+const login = async (email,password)=>{
+    const response = await fetch("/login",{
+        method: "POST",
+        headers:{
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({email,password})
+    })
+    const data = await response.json()
+    console.log(data)
+    if(data.status === "success"){
+        setTimeout(()=>{
+            window.location.href = loc[0]+":"+loc[1]+":"+loc[2].split("/")[0]+"/views"
+         },1000)
+    }else{
+        Swal.fire({
+            icon: 'error',
+            title: 'X',
+            text: 'Algo ha ocurrido',
+          })
+    }
+}

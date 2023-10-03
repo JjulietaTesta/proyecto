@@ -1,6 +1,6 @@
 import { USER_MODEL } from "./models/users.js";
 
-export class UsersMongoDao {
+export default class UsersMongoDao {
 
     async getUser(){
         return await USER_MODEL.find({})
