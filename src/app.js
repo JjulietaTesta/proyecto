@@ -20,6 +20,7 @@ import { ProductsRepository } from "./dao/repository/products.repository.js";
 import { PRODUCTS_DAO } from "./dao/index.js"
 import PRODUCTS_MODEL from "./dao/mongo/models/products.js"
 import mockRouter from "./router/mock.router.js"
+import errorHandler from "./middleware/errors.js"
 
 
 configuration()
@@ -32,6 +33,7 @@ const ENVIROMENT = process.env.ENVIROMENT
 
 app.use(cookieParser())
 
+app.use(errorHandler)
 
 app.use(session({
   store: MongoStore.create({

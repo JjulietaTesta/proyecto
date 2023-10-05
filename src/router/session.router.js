@@ -4,6 +4,9 @@ import passport from "passport";
 import { generateToken, passportCall, authorization } from "../utils.js";
 import {UsersRepository} from "../dao/repository/users.repository.js"
 import {USER_DAO} from "../dao/index.js"
+import CustomError from "../services/errors/customErr.js";
+import Eerrors from "../services/errors/enum.js";
+import { generateUserErrorInfo } from "../services/errors/info.js";
 
 const userService = new UsersRepository(USER_DAO)
 
@@ -25,7 +28,17 @@ router.post(
   }),
   async (req, res) => {
     if (!req.user) {
-      return res.status(401).json("error de autenticacion");
+      CustomError.createError({
+        name: "Usuario o contraseña incorrectos",
+        cause: generateUserErrorInfo({
+          first_name,
+          last_name,
+          age,
+          email
+        }),
+        message: "Los datos son incorrectos, verifique",
+        code: Eerrors.INVALID_TYPES_ERROR
+      })
     }
     req.session.user = {
       first_name: req.user.first_name,
@@ -41,12 +54,32 @@ router.post(
 
 router.post("/login",async(req,res)=>{
   const {email,password} = req.body
-  const user = await User.findOne({email: email})
+  const user = await user.findOne({email: email})
   if(!user){
-      return res.json({status: "error", message: "User not found"})
+      CustomError.createError({
+        name: "Usuario no encontrado",
+        cause: generateUserErrorInfo({
+          first_name,
+          last_name,
+          age,
+          email
+        }),
+        message: "Usuario incorrecto",
+        code: Eerrors.INVALID_TYPES_ERROR
+      })
   }else{
       if(!isValidPassword(password,user.password)){
-          return res.json({status: "error", message: "Invalid password"})
+        CustomError.createError({
+          name: "Contraseña incorrecta",
+          cause: generateUserErrorInfo({
+            first_name,
+            last_name,
+            age,
+            email
+          }),
+          message: "Contraseña incorrecta",
+          code: Eerrors.INVALID_TYPES_ERROR
+        })
       }else{
           const myToken = generateToken(user)
           res.cookie("coderCookieToken",myToken,{ 
