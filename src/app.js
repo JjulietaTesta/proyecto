@@ -2,13 +2,10 @@ import { engine } from "express-handlebars";
 import express from 'express';
 import { __dirname, authToken } from "./utils.js";
 import viewsRoute from "./router/views.router.js";
-import ProductsModel from "./dao/mongo/models/products.js";
-import messageModel from "./dao/mongo/models/messages.js";
 import productRouter from "./router/product.router.js";
 import chatRouter from "./router/chat.router.js"
 import cartRouter from "./router/cart.router.js"
 import { Server } from "socket.io";
-import * as dotenv from 'dotenv';
 import mongoose from "mongoose";
 import session from "express-session";
 import MongoStore from "connect-mongo";
@@ -22,6 +19,7 @@ import {configuration} from "./config.js"
 import { ProductsRepository } from "./dao/repository/products.repository.js";
 import { PRODUCTS_DAO } from "./dao/index.js"
 import PRODUCTS_MODEL from "./dao/mongo/models/products.js"
+import mockRouter from "./router/mock.router.js"
 
 
 configuration()
@@ -74,6 +72,7 @@ app.use("/chat", chatRouter );
 app.use("/login", loginRouter);
 app.use("/signup", signupRouter);
 app.use("/", sessionRouter);
+app.use("/mockingproducts", mockRouter)
 
 
 app.get("/login", (req,res)=>{

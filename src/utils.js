@@ -3,6 +3,7 @@ import { dirname } from "path";
 import bcrypt, { genSaltSync } from "bcrypt";
 import jwt from "jsonwebtoken";
 import passport from "passport";
+import { faker } from "@faker-js/faker";
 
 export const __filename = fileURLToPath(import.meta.url);
 export const __dirname = dirname(__filename);
@@ -53,4 +54,25 @@ export const authorization = (role)=>{
         if(req.user.user.role !== role) return res.json({status: "error", message: "Error de autenticación"})
         next()
     }
+}
+
+
+export const mockingProduct = () => {
+
+    let numOfProducts = parseInt(faker.string.numeric())
+    let products = []
+
+    for (let i=0; i<=numOfProducts; i++) {
+        products.push({
+            title: faker.commerce.productName(),
+            price: faker.commerce.price(),
+            stock: faker.string.numeric(),
+            id: faker.database.mongodbObjectId(),
+            image: faker.image.url(),
+            code: faker.commerce.isbn(),
+            description: faker.commerce.productDescription()
+        })
+    }
+
+    return products
 }
