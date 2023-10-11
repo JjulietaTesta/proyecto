@@ -21,6 +21,8 @@ import { PRODUCTS_DAO } from "./dao/index.js"
 import PRODUCTS_MODEL from "./dao/mongo/models/products.js"
 import mockRouter from "./router/mock.router.js"
 import errorHandler from "./middleware/errors.js"
+import { addLogger } from "./services/logger.js";
+
 
 
 configuration()
@@ -32,8 +34,9 @@ const connection = mongoose.connect(MONGO_URI)
 const ENVIROMENT = process.env.ENVIROMENT
 
 app.use(cookieParser())
-
 app.use(errorHandler)
+app.use(addLogger)
+
 
 app.use(session({
   store: MongoStore.create({
@@ -75,6 +78,7 @@ app.use("/login", loginRouter);
 app.use("/signup", signupRouter);
 app.use("/", sessionRouter);
 app.use("/mockingproducts", mockRouter)
+app.use("/loggerTests")
 
 
 app.get("/login", (req,res)=>{
