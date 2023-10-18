@@ -21,7 +21,7 @@ import { PRODUCTS_DAO } from "./dao/index.js"
 import PRODUCTS_MODEL from "./dao/mongo/models/products.js"
 import mockRouter from "./router/mock.router.js"
 import errorHandler from "./middleware/errors.js"
-import { addLogger } from "./services/logger.js";
+import { loggerRouter } from "./router/logger.router.js";
 
 
 
@@ -35,7 +35,7 @@ const ENVIROMENT = process.env.ENVIROMENT
 
 app.use(cookieParser())
 app.use(errorHandler)
-app.use(addLogger)
+
 
 
 app.use(session({
@@ -78,7 +78,7 @@ app.use("/login", loginRouter);
 app.use("/signup", signupRouter);
 app.use("/", sessionRouter);
 app.use("/mockingproducts", mockRouter)
-app.use("/loggerTests")
+app.use("/loggerTests", loggerRouter)
 
 
 app.get("/login", (req,res)=>{
