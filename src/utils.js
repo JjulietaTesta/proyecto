@@ -32,8 +32,8 @@ export const authToken = (req,res,next)=>{
 }
 
 export const authAdmin = (req, res, next)=>{
-    if(req.user.user.role !== "user") return res.send({status:error, message:"invalid role"})
-    next()
+    if(req.user.user.role === "admin" || req.user.user.role === "premium") return next() 
+    return res.send({status: "error", message: "Is not admin"})
 }
 
 export const passportCall = (strategy)=>{

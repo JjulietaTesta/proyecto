@@ -22,7 +22,7 @@ import PRODUCTS_MODEL from "./dao/mongo/models/products.js"
 import mockRouter from "./router/mock.router.js"
 import errorHandler from "./middleware/errors.js"
 import { loggerRouter } from "./router/logger.router.js";
-
+import { usersRouter } from "./router/users.router.js";
 
 
 configuration()
@@ -79,6 +79,7 @@ app.use("/signup", signupRouter);
 app.use("/", sessionRouter);
 app.use("/mockingproducts", mockRouter)
 app.use("/loggerTests", loggerRouter)
+app.use("/api/users", usersRouter)
 
 
 app.get("/login", (req,res)=>{

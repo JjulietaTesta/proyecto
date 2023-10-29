@@ -7,8 +7,11 @@ import {USER_DAO} from "../dao/index.js"
 import CustomError from "../services/errors/customErr.js";
 import Eerrors from "../services/errors/enum.js";
 import { generateUserErrorInfo } from "../services/errors/info.js";
+import { transport } from "../mailler/nodemailler.js";
 
 const userService = new UsersRepository(USER_DAO)
+
+let userTemp = ""
 
 const router = Router()
 
@@ -137,6 +140,54 @@ router.get(
     res.redirect("/");
   }
 );
+
+router.get("/recover",(req,res)=>{
+  res.render("recoverPassword", {title: "Recover password", script: "recoverPassword.js", style: "recoverPassword.css", PORT: process.env.PORT})
+})
+
+router.post("/recoverPassword",async(req,res)=>{
+  const {mail} = req.body
+  try{
+    await transport.sendMail({
+      from: "Forgot password <coder123@gmail.com>", 
+      to: mail,
+      subject: "Forgot password",
+      headers: {
+          'Expiry-Date': new Date(Date.now() + 3600 * 1000).toUTCString()
+      },
+      html: `
+          <h1>Forgot password</h1>
+       <a href="http://localhost:${process.env.PORT}/replacePassword"><button>Recuperar contraseña</button></a>
+      `
+     })
+     userTemp = await userService.getUserByEmail(mail)
+     res.json({status: "success", message: "Mail sended"})
+  }catch(err){
+      console.log(err)
+  }
+})
+
+router.get("/replacePassword",(req,res)=>{
+  res.render("replacePassword", {title: "Replace Password", style: "replacePassword.css", script: "replacePassword.js"})
+})
+
+router.post("/replace",async(req,res)=>{
+  try{
+  const {pass} = req.body
+  const user = await userService.getUserByEmail(userTemp.email)
+  console.log(user.password)
+  if(isValidPassword(pass,user.password)){
+      return res.json({status: "error", message: "same password"})
+  }else{
+      user.password = createHash(pass)
+      const data = await userService.modifyUser(user.id,user)
+      res.json({status: "Success", message: "Password replaced", data})
+  }
+  }catch(err){
+      console.log(err)
+  }
+})
+
 
 
 export default router
