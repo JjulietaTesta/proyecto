@@ -1,0 +1,147 @@
+paths:
+  /products:
+    get:
+      summary: trae todos los productos
+      tags:
+        - Products
+      responses:
+        "200":
+          description: productos obtenidos exitosamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#components/schemas/Products"
+        "500":
+          description: Error interno del servidor
+          
+    post:
+      summary: Crea un nuevo producto
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/schemas/ProductInput"
+      responses:
+        "201":
+          description: Producto creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Product"
+        "500":
+          description: Error al crear producto
+  /products/{pid}:
+    get:
+      summary: trae el producto que coincida con el id especificado
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: Id del producto
+          schema:
+            type: string
+      responses:
+        "200":
+          description: producto obtenido exitosamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#components/schemas/Product"
+        "500":
+          description: "Error del servidor"
+    put:
+      summary: Actualiza un determinado producto
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: Id del producto que se desea modificar
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/schemas/ProductInput"
+      responses:
+        "200":
+          description: Producto actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Product"
+        "500":
+          description: Error al actualizar producto
+    delete:
+      summary: Elimina un producto 
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: Id del producto a eliminar
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Producto eliminado exitosamente
+        "500":
+          description: Error al eliminar producto
+  /products/mockingproducts:
+    post:
+      summary: crea productos al azar
+      tags:
+        - Products
+      requestBody:
+        required: false
+      responses:
+        "201":
+          description: Productos aleatorios creados correctamente
+        "500":
+          description: Error al crear productos aleatorios
+  /products/stock/{pid}:
+    put:
+      summary: Actualiza el stock de un producto específico
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: Id del producto a actualizar
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                stock:
+                  type: number
+                  description: nuevo stock de producto
+              required:
+                - stock
+      responses:
+        "200":
+          description: Stock actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Product"
+        "500":
+          description: Error al actualizar 

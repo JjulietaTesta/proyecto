@@ -1,0 +1,186 @@
+paths:
+  /carts/{cid}:
+    get:
+      summary: trae el carrito que coincide con el id especificado
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Id del carrito
+          schema:
+            type: string
+      responses:
+        "200":
+          description: El carrito fue obtenido con exitos
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/carts"
+        "500":
+          description: Error del servidor
+    put:
+      summary: Actualiza un carrito con nuevos productos
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Id del carrito
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#components/schemas/products"
+      responses:
+        "200":
+          description: Carrito actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/carts"
+        "500":
+          description: Error del servidor
+    delete:
+      summary: Elimina todos los productos 
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Id del carrito
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+                  description: 
+              example:
+                reason: "Carrito vacio"
+      responses:
+        "200":
+          description: Productos eliminados del carrito exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/carts"
+        "500":
+          description: Error del servidor
+  /carts/{cid}/products/{pid}:
+    put:
+      summary: Actualiza cantidad de unidades de un mismo producto en el carrito
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Id del carrito
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          description: Id del producto
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/schemas/product"
+      responses:
+        "200":
+          description: Producto actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/carts"
+        "500":
+          description: Error del servidor
+    delete:
+      summary: Elimina un producto de un carrito
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Id del carrito
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          description: Id del producto
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Producto eliminado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/carts"
+        "500":
+          description: Error del servidor
+  /carts:
+    post:
+      summary: Crea un nuevo carrito
+      tags:
+        - Carts
+      requestBody:
+        required: false
+        content: {}
+      responses:
+        "200":
+          description: Carrito creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/carts"
+        "500":
+          description: Error al crear carrito
+  /carts/{cid}/product/{pid}:
+    post:
+      summary: Agrega un producto a un carrito
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Id del carrito
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          description: Id del producto a agregar
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Producto agregado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/carts"
+        "500":
+          description: Error del servidor
+ 

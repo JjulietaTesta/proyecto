@@ -1,29 +1,31 @@
 import { engine } from "express-handlebars";
 import express from 'express';
-import { __dirname, authToken } from "./utils.js";
-import viewsRoute from "./router/views.router.js";
-import productRouter from "./router/product.router.js";
-import chatRouter from "./router/chat.router.js"
-import cartRouter from "./router/cart.router.js"
 import { Server } from "socket.io";
 import mongoose from "mongoose";
 import session from "express-session";
 import MongoStore from "connect-mongo";
+import passport from "passport";
+import cookieParser from "cookie-parser";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUiExpress from "swagger-ui-express";
+
+import { __dirname, authToken } from "./utils.js";
+import viewsRoute from "./router/views.router.js";
+import productRouter from "./router/product.router.js";
+import chatRouter from "./router/chat.router.js";
+import cartRouter from "./router/cart.router.js";
 import loginRouter from "./router/login.router.js";
 import signupRouter from "./router/signUp.router.js";
 import sessionRouter from "./router/session.router.js";
-import passport from "passport";
 import initializePassport from "./config/passport.config.js";
-import cookieParser from "cookie-parser";
-import {configuration} from "./config.js"
+import {configuration} from "./config.js";
 import { ProductsRepository } from "./dao/repository/products.repository.js";
-import { PRODUCTS_DAO } from "./dao/index.js"
-import PRODUCTS_MODEL from "./dao/mongo/models/products.js"
-import mockRouter from "./router/mock.router.js"
-import errorHandler from "./middleware/errors.js"
+import { PRODUCTS_DAO } from "./dao/index.js";
+import PRODUCTS_MODEL from "./dao/mongo/models/products.js";
+import mockRouter from "./router/mock.router.js";
+import errorHandler from "./middleware/errors.js";
 import { loggerRouter } from "./router/logger.router.js";
 import { usersRouter } from "./router/users.router.js";
-
 
 configuration()
 const app = express();
@@ -51,6 +53,19 @@ app.use(session({
   saveUninitialized: false
 
 }))
+
+const swaggerOptions = {
+  definition: {
+      openapi: "3.0.1" ,
+      info: {   
+          title: "Documentación",
+          description: "Acciones de las rutas products y carts"
+      }
+  }, 
+  apis: [`${__dirname}/docs/**/*.yaml`]
+}
+
+const specs = swaggerJSDoc(swaggerOptions)
 
 
 initializePassport();
@@ -80,6 +95,7 @@ app.use("/", sessionRouter);
 app.use("/mockingproducts", mockRouter)
 app.use("/loggerTests", loggerRouter)
 app.use("/api/users", usersRouter)
+app.use("/api-docs",swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
 
 
 app.get("/login", (req,res)=>{
@@ -109,7 +125,6 @@ app.get ("/logout", (req, res)=>{
     }
   })
 })
-
 
 const httpServer = app.listen(PORT, () => {
   console.log(`Servidor en ejecución en http://localhost:${PORT}`);
